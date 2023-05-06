@@ -43,10 +43,10 @@ int main()
     }
 
     char *equacoes;
-    equacoes = (char *)malloc(qntProdutos * (qntCompostos * (6 * sizeof(char) + 1 * sizeof(int))) + 1 * sizeof(float) + 5 * sizeof(char));
+    equacoes = (char *)malloc(qntProdutos * ((1 * sizeof(float) + 6 * sizeof(char) + 1 * sizeof(int)) + 1 * sizeof(float) + 10 * sizeof(char) + 1 * sizeof(char)));
 
     char *variavel;
-    variavel = (char *)malloc(6 * sizeof(char) + 1 * sizeof(int));
+    variavel = (char *)malloc(1 * sizeof(float) + 10 * sizeof(char) + 1 * sizeof(int));
 
     // Função objetivo
     sprintf(equacoes, "max: ");
@@ -58,16 +58,20 @@ int main()
             sprintf(variavel, " + %fx%d", lucroProduto[i], (i + 1));
         strcat(equacoes, variavel);
     }
-    strcat(equacoes,";");
-    printf("%s\n",equacoes);
+    strcat(equacoes, ";");
+    printf("%s\n", equacoes);
 
     // Equações limitantes
     for (i = 0; i < qntCompostos; i++)
     {
+        strcpy(equacoes, "");
         for (j = 0; j < qntProdutos; j++)
         {
             if (j == 0)
-                sprintf(equacoes, "%5fx%d", matrizPrincipal[j][i], (j + 1));
+            {
+                sprintf(variavel, "%5fx%d", matrizPrincipal[j][i], (j + 1));
+                strcat(equacoes, variavel);
+            }
             else
             {
                 sprintf(variavel, " + %5fx%d", matrizPrincipal[j][i], (j + 1));
@@ -78,4 +82,15 @@ int main()
         strcat(equacoes, variavel);
         printf("%s\n", equacoes);
     }
+
+    for (i = 0; i < qntProdutos; i++)
+        free(matrizPrincipal[i]);
+    free(matrizPrincipal);
+
+    free(valores);
+    free(custos);
+    free(limites);
+    free(lucroProduto);
+    free(equacoes);
+    free(variavel);
 }
